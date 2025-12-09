@@ -100,25 +100,25 @@ extension AsyncWriter where Self: ~Copyable, Self: ~Escapable {
     /// // Write data to a file asynchronously
     /// try await fileWriter.write(dataChunk)
     /// ```
-    @_lifetime(self: copy self)
-    public mutating func write(_ element: consuming WriteElement) async throws(WriteFailure) {
-        // Since the element is ~Copyable but we don't have call-once closures
-        // we need to move it into an Optional and then take it out once. This
-        // also makes the below force unwrap safe
-        var opt = Optional(element)
-        do {
-            try await self.write { outputSpan in
-                outputSpan.append(opt.take()!)
-            }
-        } catch {
-            switch error {
-            case .first(let error):
-                throw error
-            case .second:
-                fatalError()
-            }
-        }
-    }
+//    @_lifetime(self: copy self)
+//    public mutating func write(_ element: consuming WriteElement) async throws(WriteFailure) {
+//        // Since the element is ~Copyable but we don't have call-once closures
+//        // we need to move it into an Optional and then take it out once. This
+//        // also makes the below force unwrap safe
+//        var opt = Optional(element)
+//        do {
+//            try await self.write { outputSpan in
+//                outputSpan.append(opt.take()!)
+//            }
+//        } catch {
+//            switch error {
+//            case .first(let error):
+//                throw error
+//            case .second:
+//                fatalError()
+//            }
+//        }
+//    }
 
     @_lifetime(self: copy self)
     public mutating func write(_ span: Span<WriteElement>) async throws(EitherError<WriteFailure, AsyncWriterWroteShortError>)
