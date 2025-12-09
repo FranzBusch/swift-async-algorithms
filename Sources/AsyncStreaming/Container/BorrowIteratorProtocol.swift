@@ -4,6 +4,7 @@ public protocol BorrowMutableIteratorProtocol<Element>: ~Copyable, ~Escapable {
 
   // TODO: This is using a closure since we need the exclusive modifier to be
   // able to extract mutable spans from the underlying owning buffer
+  @_lifetime(self: copy self)
   mutating func nextSpan<Return, Failure>(
     maximumCount: Int?,
     body: (inout MutableSpan<Element>) async throws(Failure) -> Return
