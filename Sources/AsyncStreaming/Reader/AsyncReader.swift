@@ -44,9 +44,6 @@ public protocol AsyncReader<ReadElement, ReadFailure>: ~Copyable, ~Escapable {
     ///     return data
     /// }
     /// ```
-    #if compiler(<6.3)
-    @_lifetime(&self)
-    #endif
     mutating func read<Return, Failure: Error>(
         body: (inout ReadIterator) async throws(Failure) -> Return
     ) async throws(EitherError<ReadFailure, Failure>) -> Return
@@ -79,9 +76,6 @@ extension AsyncReader where Self: ~Copyable, Self: ~Escapable {
     ///     return span.count
     /// }
     /// ```
-    #if compiler(<6.3)
-    @_lifetime(&self)
-    #endif
     public mutating func read<Return, Failure: Error>(
         body: (inout ReadIterator) async throws(Failure) -> Return
     ) async throws(Failure) -> Return where Self.ReadFailure == Never {
