@@ -126,7 +126,7 @@ if Context.environment["SWIFTCI_USE_LOCAL_DEPS"] == nil {
   package.dependencies += [
     .package(
       url: "https://github.com/FranzBusch/swift-collections.git",
-      revision: "53408db248f5bea068579343c47aa0a542dce6c9",
+      revision: "4c003eaa00a76c6ea6d983d58097847c1e102eac",
     )
   ]
 } else {
