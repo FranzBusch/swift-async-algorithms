@@ -20,10 +20,24 @@ let availabilityMacros: [SwiftSetting] = [
   ),
 ]
 
+let extraSettings: [SwiftSetting] = [
+  .strictMemorySafety(),
+  .enableExperimentalFeature("SuppressedAssociatedTypes"),
+  .enableExperimentalFeature("LifetimeDependence"),
+  .enableExperimentalFeature("Lifetimes"),
+  .enableUpcomingFeature("LifetimeDependence"),
+  .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+  .enableUpcomingFeature("InferIsolatedConformances"),
+  .enableUpcomingFeature("ExistentialAny"),
+  .enableUpcomingFeature("MemberImportVisibility"),
+  .enableUpcomingFeature("InternalImportsByDefault"),
+]
+
 let package = Package(
   name: "swift-async-algorithms",
   products: [
-    .library(name: "AsyncAlgorithms", targets: ["AsyncAlgorithms"])
+    .library(name: "AsyncAlgorithms", targets: ["AsyncAlgorithms"]),
+    .library(name: "AsyncStreaming", targets: ["AsyncStreaming"])
   ],
   targets: [
     .target(
@@ -35,6 +49,14 @@ let package = Package(
       swiftSettings: availabilityMacros + [
         .enableExperimentalFeature("StrictConcurrency=complete")
       ]
+    ),
+    .target(
+      name: "AsyncStreaming",
+      dependencies: [
+        .product(name: "DequeModule", package: "swift-collections"),
+        .product(name: "BasicContainers", package: "swift-collections"),
+      ],
+      swiftSettings: extraSettings + [.swiftLanguageMode(.v6)]
     ),
     .target(
       name: "AsyncSequenceValidation",
@@ -50,6 +72,13 @@ let package = Package(
       swiftSettings: availabilityMacros + [
         .enableExperimentalFeature("StrictConcurrency=complete")
       ]
+    ),
+    .testTarget(
+      name: "AsyncStreamingTests",
+      dependencies: [
+        .target(name: "AsyncStreaming"),
+      ],
+      swiftSettings: extraSettings + [.swiftLanguageMode(.v6)]
     ),
     .testTarget(
       name: "AsyncAlgorithmsTests",
@@ -95,7 +124,10 @@ let package = Package(
 
 if Context.environment["SWIFTCI_USE_LOCAL_DEPS"] == nil {
   package.dependencies += [
-    .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0")
+    .package(
+      url: "https://github.com/FranzBusch/swift-collections.git",
+      revision: "53408db248f5bea068579343c47aa0a542dce6c9",
+    )
   ]
 } else {
   package.dependencies += [
